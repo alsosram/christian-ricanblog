@@ -1,5 +1,6 @@
 /* ===== STATE ===== */
 let allPosts = [];
+let siteConfig = {};
 
 /* ===== DOM REFS ===== */
 const postsGrid = document.getElementById('postsGrid');
@@ -13,6 +14,45 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
+}
+
+/* ===== LOAD & APPLY SITE CONFIG ===== */
+async function loadConfig() {
+  try {
+    const res = await fetch('site-config.json');
+    siteConfig = await res.json();
+    applyConfig(siteConfig);
+  } catch {}
+}
+
+function applyConfig(cfg) {
+  document.querySelectorAll('[data-cfg]').forEach(el => {
+    const key = el.dataset.cfg;
+    const val = getNested(cfg, key);
+    if (val) el.innerHTML = val;
+  });
+  document.querySelectorAll('[data-cfg-src]').forEach(el => {
+    const key = el.dataset.cfgSrc;
+    const val = getNested(cfg, key);
+    if (val) el.src = val;
+  });
+  document.querySelectorAll('[data-cfg-bg]').forEach(el => {
+    const key = el.dataset.cfgBg;
+    const val = getNested(cfg, key);
+    if (val) el.style.setProperty('--hero-bg', `url('${val}')`);
+  });
+  const titleEl = document.querySelector('[data-cfg="titleTag"]');
+  if (titleEl && cfg.siteName) {
+    document.title = `${cfg.siteName} — A Christian Blog`;
+  }
+  const metaDesc = document.querySelector('meta[data-cfg="metaDescription"]');
+  if (metaDesc && cfg.metaDescription) {
+    metaDesc.setAttribute('content', cfg.metaDescription);
+  }
+}
+
+function getNested(obj, path) {
+  return path.split('.').reduce((o, p) => (o ? o[p] : undefined), obj);
 }
 
 /* ===== RENDER POST CARDS ===== */
@@ -146,4 +186,5 @@ if (subForm) {
 }
 
 /* ===== INIT ===== */
+loadConfig();
 loadPosts();

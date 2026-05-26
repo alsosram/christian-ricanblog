@@ -1,5 +1,5 @@
 /* ===== CONFIG ===== */
-const ADMIN_PASSWORD_HASH = 'REDACTED'; // SHA-256 of "REDACTED" — CHANGE THIS
+const ADMIN_PASSWORD_HASH = 'REDACTED';
 
 /* ===== STATE ===== */
 let token = '';
@@ -8,25 +8,27 @@ let repo = '';
 let allPosts = [];
 let editingId = null;
 
-/* ===== DOM REFS ===== */
+/* ===== DOM REFS — VIEWS ===== */
 const viewLogin = document.getElementById('viewLogin');
 const viewDashboard = document.getElementById('viewDashboard');
 const viewEditor = document.getElementById('viewEditor');
 const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
+
+/* ===== DOM REFS — DASHBOARD ===== */
 const postsBody = document.getElementById('postsBody');
 const postsTable = document.getElementById('postsTable');
 const emptyState = document.getElementById('emptyState');
 const dashLoading = document.getElementById('dashLoading');
 const newPostBtn = document.getElementById('newPostBtn');
 const logoutBtn = document.getElementById('logoutBtn');
+
+/* ===== DOM REFS — EDITOR ===== */
 const editorBackBtn = document.getElementById('editorBackBtn');
 const editorForm = document.getElementById('editorForm');
 const editorTitle = document.getElementById('editorTitle');
 const edSaveBtn = document.getElementById('edSaveBtn');
 const edMsg = document.getElementById('edMsg');
-
-/* Fields */
 const edTitle = document.getElementById('edTitle');
 const edSlug = document.getElementById('edSlug');
 const edCategory = document.getElementById('edCategory');
@@ -36,7 +38,12 @@ const edImage = document.getElementById('edImage');
 const edExcerpt = document.getElementById('edExcerpt');
 const edContent = document.getElementById('edContent');
 
-/* ===== SHA-256 (subtle crypto) ===== */
+/* ===== DOM REFS — SETTINGS ===== */
+const settingsForm = document.getElementById('settingsForm');
+const settingsMsg = document.getElementById('settingsMsg');
+const settingsSaveBtn = document.getElementById('settingsSaveBtn');
+
+/* ===== SHA-256 ===== */
 async function sha256(str) {
   const buf = new TextEncoder().encode(str);
   const hash = await crypto.subtle.digest('SHA-256', buf);
@@ -108,7 +115,7 @@ function showView(view) {
 
 function showDashboard() {
   showView(viewDashboard);
-  loadDashboardPosts();
+  switchTab(document.querySelector('.tab.active'));
 }
 
 function showEditor(post = null) {
@@ -136,6 +143,23 @@ function showEditor(post = null) {
   }
 }
 
+/* ===== TABS ===== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => switchTab(tab));
+});
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const tabId = tab.dataset.tab;
+  document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+  const content = document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
+  if (content) content.style.display = '';
+
+  if (tabId === 'posts') loadDashboardPosts();
+  if (tabId === 'settings') loadSettings();
+}
+
 /* ===== GENERATE SLUG ===== */
 edTitle.addEventListener('input', () => {
   if (editingId) return;
@@ -152,12 +176,8 @@ async function loadDashboardPosts() {
   emptyState.style.display = 'none';
   try {
     const data = await readFileContent('posts/posts.json');
-    if (data) {
-      allPosts = JSON.parse(data.content);
-    } else {
-      allPosts = [];
-    }
-  } catch (err) {
+    allPosts = data ? JSON.parse(data.content) : [];
+  } catch {
     allPosts = [];
   }
   renderDashboardPosts();
@@ -199,8 +219,8 @@ logoutBtn.addEventListener('click', () => {
   localStorage.removeItem('adminRepo');
   showView(viewLogin);
 });
-editorBackBtn.addEventListener('click', showDashboard);
-document.getElementById('edCancelBtn').addEventListener('click', showDashboard);
+editorBackBtn.addEventListener('click', () => { showDashboard(); switchTab(document.querySelector('[data-tab="posts"]')); });
+document.getElementById('edCancelBtn').addEventListener('click', () => { showDashboard(); switchTab(document.querySelector('[data-tab="posts"]')); });
 
 function editPost(id) {
   const post = allPosts.find(p => p.id === id);
@@ -262,21 +282,86 @@ editorForm.addEventListener('submit', async (e) => {
     await writeFile(`posts/${slug}.json`, postContent, postSha);
 
     const meta = { id: slug, title, date, author, excerpt, category, image };
-    if (idx >= 0) {
-      posts[idx] = meta;
-    } else {
-      posts.push(meta);
-    }
+    if (idx >= 0) { posts[idx] = meta; } else { posts.push(meta); }
     await writeFile('posts/posts.json', JSON.stringify(posts, null, 2), postsData ? postsData.sha : null);
 
-    edMsg.textContent = 'Post published! Redirecting to dashboard...';
+    edMsg.textContent = 'Post published! Redirecting...';
     edMsg.className = 'form-msg success';
-    setTimeout(showDashboard, 800);
+    setTimeout(() => { showDashboard(); switchTab(document.querySelector('[data-tab="posts"]')); }, 800);
   } catch (err) {
     edMsg.textContent = 'Error: ' + err.message;
     edMsg.className = 'form-msg error';
     edSaveBtn.disabled = false;
   }
+});
+
+/* ===== SETTINGS EDITOR ===== */
+const SETTINGS_PATH = 'site-config.json';
+
+/* Map setting field IDs to config paths */
+const SETTINGS_FIELDS = [
+  'siteName', 'metaDescription',
+  'hero-title', 'hero-subtitle', 'hero-bgImage',
+  'about-title', 'about-paragraph1', 'about-paragraph2', 'about-verse', 'about-image',
+  'subscribe-title', 'subscribe-subtitle', 'subscribe-successMsg',
+  'footer-tagline'
+];
+
+async function loadSettings() {
+  settingsMsg.textContent = 'Loading...';
+  settingsMsg.className = 'form-msg';
+  try {
+    const data = await readFileContent(SETTINGS_PATH);
+    if (!data) throw new Error('site-config.json not found');
+    const cfg = JSON.parse(data.content);
+    SETTINGS_FIELDS.forEach(key => {
+      const el = document.getElementById(`cfg-${key}`);
+      if (el) {
+        const val = key.split('-').reduce((o, p) => (o ? o[p] : undefined), cfg);
+        el.value = val || '';
+      }
+    });
+    settingsMsg.textContent = '';
+    settingsMsg.className = 'form-msg';
+  } catch (err) {
+    settingsMsg.textContent = 'Error loading settings: ' + err.message;
+    settingsMsg.className = 'form-msg error';
+  }
+}
+
+settingsForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  settingsMsg.textContent = 'Saving...';
+  settingsMsg.className = 'form-msg';
+  settingsSaveBtn.disabled = true;
+
+  const cfg = {};
+
+  SETTINGS_FIELDS.forEach(key => {
+    const el = document.getElementById(`cfg-${key}`);
+    if (!el) return;
+    const parts = key.split('-');
+    let current = cfg;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!current[parts[i]]) current[parts[i]] = {};
+      current = current[parts[i]];
+    }
+    current[parts[parts.length - 1]] = el.value;
+  });
+
+  cfg.siteName = cfg.siteName || 'Faith & Fellowship';
+
+  try {
+    const data = await readFileContent(SETTINGS_PATH);
+    const content = JSON.stringify(cfg, null, 2);
+    await writeFile(SETTINGS_PATH, content, data ? data.sha : null);
+    settingsMsg.textContent = 'Settings saved! The site will update on next deploy.';
+    settingsMsg.className = 'form-msg success';
+  } catch (err) {
+    settingsMsg.textContent = 'Error: ' + err.message;
+    settingsMsg.className = 'form-msg error';
+  }
+  settingsSaveBtn.disabled = false;
 });
 
 /* ===== RESTORE SESSION ===== */

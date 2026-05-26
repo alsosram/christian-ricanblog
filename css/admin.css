@@ -142,10 +142,39 @@ label input, label textarea { margin-top: 6px; }
 }
 .admin-header .nav-link:hover { color: var(--clr-primary); }
 
+/* ===== TABS ===== */
+.admin-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--clr-border);
+  background: var(--clr-white);
+}
+.admin-tabs .tab {
+  padding: 14px 28px;
+  font-family: var(--ff-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--clr-text-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.admin-tabs .tab:hover { color: var(--clr-text); }
+.admin-tabs .tab.active {
+  color: var(--clr-primary);
+  border-bottom-color: var(--clr-primary);
+}
+
 /* ===== DASHBOARD ===== */
 .admin-main { padding: 40px 24px; }
 .dash-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
 .dash-top h2 { font-size: 1.5rem; font-weight: 600; color: var(--clr-primary-dark); }
+.settings-hint { font-size: 0.85rem; color: var(--clr-text-light); }
 .loading { text-align: center; color: var(--clr-text-light); padding: 60px 0; }
 
 .posts-table {
@@ -188,6 +217,26 @@ label input, label textarea { margin-top: 6px; }
 .posts-table .actions .btn { min-width: 60px; text-align: center; }
 .empty-state { text-align: center; color: var(--clr-text-light); padding: 60px 0; }
 
+/* ===== SETTINGS FORM ===== */
+.settings-form { max-width: 700px; }
+.settings-group {
+  background: var(--clr-white);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.settings-group h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--clr-primary-dark);
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--clr-border);
+}
+.settings-group label { margin-bottom: 14px; }
+.settings-group label:last-child { margin-bottom: 0; }
+
 /* ===== EDITOR ===== */
 .editor-form { background: var(--clr-white); padding: 32px; border-radius: var(--radius); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 .editor-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -208,4 +257,6 @@ label input, label textarea { margin-top: 6px; }
   .posts-table th, .posts-table td { padding: 10px 10px; }
   .posts-table .actions { flex-direction: column; gap: 4px; }
   .editor-form { padding: 20px; }
+  .admin-tabs .tab { padding: 12px 16px; font-size: 0.75rem; }
+  .settings-group { padding: 18px; }
 }

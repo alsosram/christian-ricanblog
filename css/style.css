@@ -137,9 +137,10 @@ ul { list-style: none; }
   justify-content: center;
   text-align: center;
   position: relative;
+  --hero-bg: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&q=80');
   background:
     linear-gradient(135deg, rgba(29,38,50,0.75) 0%, rgba(45,90,142,0.55) 100%),
-    url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&q=80') center/cover fixed;
+    var(--hero-bg) center/cover fixed;
   margin-top: calc(-1 * var(--header-h));
   padding-top: var(--header-h);
 }

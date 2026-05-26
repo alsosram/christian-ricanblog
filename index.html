@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faith &amp; Fellowship — A Christian Blog</title>
-  <meta name="description" content="Exploring faith, hope, and the love of God through daily reflections and biblical wisdom.">
+  <title data-cfg="titleTag">Faith &amp; Fellowship — A Christian Blog</title>
+  <meta name="description" data-cfg="metaDescription" content="Exploring faith, hope, and the love of God through daily reflections and biblical wisdom.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
   <!-- ===== HEADER / NAV ===== -->
   <header class="site-header" id="top">
     <div class="container header-inner">
-      <a href="#" class="logo">Faith &amp; Fellowship</a>
+      <a href="#" class="logo" data-cfg="siteName">Faith &amp; Fellowship</a>
       <nav class="main-nav" id="mainNav">
         <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
         <ul class="nav-list">
@@ -32,11 +32,11 @@
   <main>
 
     <!-- ===== HERO ===== -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" data-cfg-bg="hero.bgImage">
       <div class="hero-overlay"></div>
       <div class="container hero-content">
-        <h1>Rooted in Faith,<br>Growing in Grace</h1>
-        <p>Daily reflections, biblical wisdom, and encouragement for your spiritual journey.</p>
+        <h1 data-cfg="hero.title">Rooted in Faith,<br>Growing in Grace</h1>
+        <p data-cfg="hero.subtitle">Daily reflections, biblical wisdom, and encouragement for your spiritual journey.</p>
         <a href="#posts" class="btn btn-primary">Latest Posts</a>
       </div>
     </section>
@@ -55,15 +55,15 @@
     <!-- ===== SUBSCRIBE ===== -->
     <section class="section subscribe-section" id="subscribe">
       <div class="container">
-        <h2 class="section-title">Stay Connected</h2>
-        <p class="section-subtitle">Subscribe to receive new posts delivered straight to your inbox.</p>
+        <h2 class="section-title" data-cfg="subscribe.title">Stay Connected</h2>
+        <p class="section-subtitle" data-cfg="subscribe.subtitle">Subscribe to receive new posts delivered straight to your inbox.</p>
         <form class="subscribe-form" id="subscribeForm" netlify>
           <input type="hidden" name="form-name" value="subscribe">
           <div class="subscribe-inner">
             <input type="email" name="email" placeholder="Enter your email address" required>
             <button type="submit" class="btn btn-primary">Subscribe</button>
           </div>
-          <p class="subscribe-success" id="subscribeSuccess">Thanks for subscribing! You'll hear from us soon.</p>
+          <p class="subscribe-success" id="subscribeSuccess" data-cfg="subscribe.successMsg">Thanks for subscribing! You'll hear from us soon.</p>
         </form>
       </div>
     </section>
@@ -72,13 +72,13 @@
     <section class="section about-section" id="about">
       <div class="container about-content">
         <div class="about-text">
-          <h2 class="section-title">About This Blog</h2>
-          <p>Welcome to <strong>Faith &amp; Fellowship</strong> — a place where we explore the depths of God's love, the beauty of Scripture, and the joy of walking in relationship with Jesus Christ.</p>
-          <p>Whether you are a lifelong believer or just beginning to explore faith, our hope is that these words encourage, challenge, and draw you closer to the heart of God.</p>
-          <p class="about-verse">"Let the message of Christ dwell among you richly..." — Colossians 3:16</p>
+          <h2 class="section-title" data-cfg="about.title">About This Blog</h2>
+          <p data-cfg="about.paragraph1">Welcome to <strong>Faith &amp; Fellowship</strong> — a place where we explore the depths of God's love, the beauty of Scripture, and the joy of walking in relationship with Jesus Christ.</p>
+          <p data-cfg="about.paragraph2">Whether you are a lifelong believer or just beginning to explore faith, our hope is that these words encourage, challenge, and draw you closer to the heart of God.</p>
+          <p class="about-verse" data-cfg="about.verse">"Let the message of Christ dwell among you richly..." — Colossians 3:16</p>
         </div>
         <div class="about-image">
-          <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&q=80" alt="Peaceful landscape" loading="lazy">
+          <img data-cfg-src="about.image" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&q=80" alt="Peaceful landscape" loading="lazy">
         </div>
       </div>
     </section>
@@ -105,8 +105,8 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <span class="footer-logo">Faith &amp; Fellowship</span>
-        <p class="footer-tagline">Exploring faith, hope, and the love of God.</p>
+        <span class="footer-logo" data-cfg="siteName">Faith &amp; Fellowship</span>
+        <p class="footer-tagline" data-cfg="footer.tagline">Exploring faith, hope, and the love of God.</p>
       </div>
       <ul class="footer-links">
         <li><a href="#home">Home</a></li>

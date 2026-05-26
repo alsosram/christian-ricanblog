@@ -53,27 +53,83 @@
       </div>
     </header>
 
+    <div class="admin-tabs container">
+      <button class="tab active" data-tab="posts">Posts</button>
+      <button class="tab" data-tab="settings">Site Settings</button>
+    </div>
+
     <main class="admin-main container">
-      <div class="dash-top">
-        <h2>Your Posts</h2>
-        <button id="newPostBtn" class="btn btn-primary">+ New Post</button>
+
+      <!-- Posts Tab -->
+      <div class="tab-content" id="tabPosts">
+        <div class="dash-top">
+          <h2>Your Posts</h2>
+          <button id="newPostBtn" class="btn btn-primary">+ New Post</button>
+        </div>
+        <div class="loading" id="dashLoading">Loading posts...</div>
+        <table class="posts-table" id="postsTable" style="display:none">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="postsBody"></tbody>
+        </table>
+        <p class="empty-state" id="emptyState" style="display:none">No posts yet. Click "+ New Post" to create your first post!</p>
       </div>
 
-      <div class="loading" id="dashLoading">Loading posts...</div>
+      <!-- Settings Tab -->
+      <div class="tab-content" id="tabSettings" style="display:none">
+        <div class="dash-top">
+          <h2>Site Settings</h2>
+          <span class="settings-hint">Edit the content shown on your blog.</span>
+        </div>
+        <form id="settingsForm" class="settings-form">
 
-      <table class="posts-table" id="postsTable" style="display:none">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="postsBody"></tbody>
-      </table>
+          <div class="settings-group">
+            <h3>Global</h3>
+            <label>Site Name <input type="text" id="cfg-siteName"></label>
+            <label>Meta Description <textarea id="cfg-metaDescription" rows="2"></textarea></label>
+          </div>
 
-      <p class="empty-state" id="emptyState" style="display:none">No posts yet. Click "+ New Post" to create your first post!</p>
+          <div class="settings-group">
+            <h3>Hero Section</h3>
+            <label>Title (HTML allowed) <textarea id="cfg-hero-title" rows="2"></textarea></label>
+            <label>Subtitle <textarea id="cfg-hero-subtitle" rows="2"></textarea></label>
+            <label>Background Image URL <input type="url" id="cfg-hero-bgImage"></label>
+          </div>
+
+          <div class="settings-group">
+            <h3>About Section</h3>
+            <label>Title <input type="text" id="cfg-about-title"></label>
+            <label>Paragraph 1 (HTML allowed) <textarea id="cfg-about-paragraph1" rows="3"></textarea></label>
+            <label>Paragraph 2 (HTML allowed) <textarea id="cfg-about-paragraph2" rows="3"></textarea></label>
+            <label>Verse (HTML allowed) <textarea id="cfg-about-verse" rows="2"></textarea></label>
+            <label>Image URL <input type="url" id="cfg-about-image"></label>
+          </div>
+
+          <div class="settings-group">
+            <h3>Subscribe Section</h3>
+            <label>Title <input type="text" id="cfg-subscribe-title"></label>
+            <label>Subtitle <textarea id="cfg-subscribe-subtitle" rows="2"></textarea></label>
+            <label>Success Message <input type="text" id="cfg-subscribe-successMsg"></label>
+          </div>
+
+          <div class="settings-group">
+            <h3>Footer</h3>
+            <label>Tagline <input type="text" id="cfg-footer-tagline"></label>
+          </div>
+
+          <div class="editor-actions">
+            <button type="submit" class="btn btn-primary" id="settingsSaveBtn">Save Settings</button>
+          </div>
+          <p class="form-msg" id="settingsMsg"></p>
+        </form>
+      </div>
+
     </main>
   </div>
 

@@ -1,0 +1,24 @@
+{
+  "siteName": "Faith & Fellowship",
+  "metaDescription": "Exploring faith, hope, and the love of God through daily reflections and biblical wisdom.",
+  "hero": {
+    "title": "Rooted in Faith,<br>Growing in Grace",
+    "subtitle": "Daily reflections, biblical wisdom, and encouragement for your spiritual journey.",
+    "bgImage": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&q=80"
+  },
+  "about": {
+    "title": "About This Blog",
+    "paragraph1": "Welcome to <strong>Faith &amp; Fellowship</strong> \u2014 a place where we explore the depths of God's love, the beauty of Scripture, and the joy of walking in relationship with Jesus Christ.",
+    "paragraph2": "Whether you are a lifelong believer or just beginning to explore faith, our hope is that these words encourage, challenge, and draw you closer to the heart of God.",
+    "verse": "\u201cLet the message of Christ dwell among you richly\u2026\u201d \u2014 Colossians 3:16",
+    "image": "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&q=80"
+  },
+  "subscribe": {
+    "title": "Stay Connected",
+    "subtitle": "Subscribe to receive new posts delivered straight to your inbox.",
+    "successMsg": "Thanks for subscribing! You'll hear from us soon."
+  },
+  "footer": {
+    "tagline": "Exploring faith, hope, and the love of God."
+  }
+}
