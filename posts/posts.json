@@ -1,0 +1,47 @@
+[
+  {
+    "id": "walking-in-faith",
+    "title": "Walking in Faith Through Life's Storms",
+    "date": "2026-05-24",
+    "author": "Ministry Team",
+    "excerpt": "Life brings trials that test our spirit. Discover how faith can be your anchor in the midst of life's fiercest storms.",
+    "category": "Faith",
+    "image": "https://images.unsplash.com/photo-1504052434564-5ac4fc2b6cb0?w=800&q=80"
+  },
+  {
+    "id": "power-of-prayer",
+    "title": "The Transformative Power of Daily Prayer",
+    "date": "2026-05-18",
+    "author": "Ministry Team",
+    "excerpt": "Prayer is more than a ritual — it's a lifeline. Learn how establishing a daily prayer practice can transform your relationship with God.",
+    "category": "Prayer",
+    "image": "https://images.unsplash.com/photo-1499728603263-13726abce5fd?w=800&q=80"
+  },
+  {
+    "id": "grace-that-transforms",
+    "title": "Grace That Transforms: A New Beginning",
+    "date": "2026-05-10",
+    "author": "Ministry Team",
+    "excerpt": "No matter where you've been or what you've done, God's grace offers a fresh start. Explore the beautiful truth of unmerited favor.",
+    "category": "Grace",
+    "image": "https://images.unsplash.com/photo-1470115633332-6689da5a3c7a?w=800&q=80"
+  },
+  {
+    "id": "community-of-believers",
+    "title": "Why We Need Community: The Body of Christ",
+    "date": "2026-05-02",
+    "author": "Ministry Team",
+    "excerpt": "Faith was never meant to be walked alone. Discover the joy and strength found in genuine Christian community.",
+    "category": "Community",
+    "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80"
+  },
+  {
+    "id": "finding-purpose",
+    "title": "Finding Your God-Given Purpose",
+    "date": "2026-04-25",
+    "author": "Ministry Team",
+    "excerpt": "You were created with intention and designed for a purpose. Uncover how to discover and walk in the calling God has placed on your life.",
+    "category": "Purpose",
+    "image": "https://images.unsplash.com/photo-1489914099268-1dad649f76bf?w=800&q=80"
+  }
+]

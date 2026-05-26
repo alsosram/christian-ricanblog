@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faith &amp; Fellowship — A Christian Blog</title>
+  <meta name="description" content="Exploring faith, hope, and the love of God through daily reflections and biblical wisdom.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#" class="logo">Faith &amp; Fellowship</a>
+      <nav class="main-nav" id="mainNav">
+        <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
+        <ul class="nav-list">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#posts" class="nav-link">Posts</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <h1>Rooted in Faith,<br>Growing in Grace</h1>
+        <p>Daily reflections, biblical wisdom, and encouragement for your spiritual journey.</p>
+        <a href="#posts" class="btn btn-primary">Latest Posts</a>
+      </div>
+    </section>
+
+    <!-- ===== LATEST POSTS ===== -->
+    <section class="section posts-section" id="posts">
+      <div class="container">
+        <h2 class="section-title">Latest Posts</h2>
+        <p class="section-subtitle">Fresh encouragement for your walk with Christ</p>
+        <div class="posts-grid" id="postsGrid">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="section about-section" id="about">
+      <div class="container about-content">
+        <div class="about-text">
+          <h2 class="section-title">About This Blog</h2>
+          <p>Welcome to <strong>Faith &amp; Fellowship</strong> — a place where we explore the depths of God's love, the beauty of Scripture, and the joy of walking in relationship with Jesus Christ.</p>
+          <p>Whether you are a lifelong believer or just beginning to explore faith, our hope is that these words encourage, challenge, and draw you closer to the heart of God.</p>
+          <p class="about-verse">"Let the message of Christ dwell among you richly..." — Colossians 3:16</p>
+        </div>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=600&q=80" alt="Peaceful landscape" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="section contact-section" id="contact">
+      <div class="container">
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-subtitle">Have a question, prayer request, or just want to say hello?</p>
+        <form class="contact-form" id="contactForm">
+          <div class="form-row">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+          </div>
+          <textarea rows="5" placeholder="Your Message..." required></textarea>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">Faith &amp; Fellowship</span>
+        <p class="footer-tagline">Exploring faith, hope, and the love of God.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#posts">Posts</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Faith &amp; Fellowship. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===== MODAL OVERLAY ===== -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
