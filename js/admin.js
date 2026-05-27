@@ -110,7 +110,7 @@ async function getFileSha(path) {
 async function readFileContent(path) {
   const data = await ghFetch(`contents/${path}`);
   if (!data) return null;
-  return { content: atob(data.content.replace(/\n/g, '')), sha: data.sha };
+  return { content: decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))), sha: data.sha };
 }
 
 async function writeFile(path, content, sha = null) {
