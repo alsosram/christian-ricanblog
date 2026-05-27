@@ -344,14 +344,14 @@ ul { list-style: none; }
   white-space: nowrap;
   padding: 12px 28px;
 }
-.subscribe-success {
-  display: none;
+.subscribe-msg {
   text-align: center;
   margin-top: 16px;
   font-size: var(--fs-small);
-  color: #A8E6CF;
+  min-height: 24px;  
 }
-.subscribe-success.visible { display: block; }
+.subscribe-msg.success { color: #A8E6CF; }
+.subscribe-msg.error { color: #FFB3B3; }
 
 /* ===== ABOUT ===== */
 .about-content {

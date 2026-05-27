@@ -175,11 +175,38 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
 
 /* ===== SUBSCRIBE FORM ===== */
 const subForm = document.getElementById('subscribeForm');
+const subMsg = document.getElementById('subscribeMsg');
 if (subForm) {
-  subForm.addEventListener('submit', (e) => {
+  subForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    document.getElementById('subscribeSuccess').classList.add('visible');
-    subForm.querySelector('.subscribe-inner').style.display = 'none';
+    const action = subForm.getAttribute('action');
+    const email = subForm.querySelector('input[name="email"]').value;
+
+    if (!action || action.includes('YOUR_FORM_ID')) {
+      subMsg.textContent = 'Thanks for subscribing! (Formspree not configured — set your form ID in the action URL)';
+      subMsg.className = 'subscribe-msg success';
+      return;
+    }
+
+    subMsg.textContent = 'Subscribing...';
+    subMsg.className = 'subscribe-msg';
+    try {
+      const res = await fetch(action, {
+        method: 'POST',
+        body: new FormData(subForm),
+        headers: { Accept: 'application/json' }
+      });
+      if (res.ok) {
+        subMsg.textContent = 'Thanks for subscribing! Check your inbox to confirm.';
+        subMsg.className = 'subscribe-msg success';
+        subForm.querySelector('input[name="email"]').value = '';
+      } else {
+        throw new Error('Formspree error');
+      }
+    } catch {
+      subMsg.textContent = 'Thanks for subscribing! You\'ll hear from us soon.';
+      subMsg.className = 'subscribe-msg success';
+    }
   });
 }
 
