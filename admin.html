@@ -56,6 +56,7 @@
     <div class="admin-tabs container">
       <button class="tab active" data-tab="posts">Posts</button>
       <button class="tab" data-tab="settings">Site Settings</button>
+      <button class="tab" data-tab="account">Account</button>
     </div>
 
     <main class="admin-main container">
@@ -130,6 +131,26 @@
         </form>
       </div>
 
+      <!-- Account Tab -->
+      <div class="tab-content" id="tabAccount" style="display:none">
+        <div class="dash-top">
+          <h2>Account</h2>
+          <span class="settings-hint">Change your admin password.</span>
+        </div>
+        <form id="passwordForm" class="settings-form">
+          <div class="settings-group">
+            <h3>Change Password</h3>
+            <label>Current Password <input type="password" id="pw-current" required></label>
+            <label>New Password <input type="password" id="pw-new" required minlength="4"></label>
+            <label>Confirm New Password <input type="password" id="pw-confirm" required minlength="4"></label>
+          </div>
+          <div class="editor-actions">
+            <button type="submit" class="btn btn-primary" id="pwSaveBtn">Update Password</button>
+          </div>
+          <p class="form-msg" id="pwMsg"></p>
+        </form>
+      </div>
+
     </main>
   </div>
 
@@ -194,6 +215,6 @@
     </main>
   </div>
 
-  <script src="js/admin.js?v=2"></script>
+  <script src="js/admin.js?v=3"></script>
 </body>
 </html>

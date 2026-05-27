@@ -1,5 +1,5 @@
-/* ===== CONFIG ===== */
-const ADMIN_PASSWORD = 'REDACTED';
+/* ===== FALLBACK PASSWORD HASH (used only if admin-config.json doesn't exist yet) ===== */
+const FALLBACK_HASH = 'REDACTED';
 
 /* ===== STATE ===== */
 let token = '';
@@ -7,6 +7,7 @@ let owner = '';
 let repo = '';
 let allPosts = [];
 let editingId = null;
+let storedHash = '';
 
 /* ===== DOM REFS — VIEWS ===== */
 const viewLogin = document.getElementById('viewLogin');
@@ -43,6 +44,18 @@ const settingsForm = document.getElementById('settingsForm');
 const settingsMsg = document.getElementById('settingsMsg');
 const settingsSaveBtn = document.getElementById('settingsSaveBtn');
 
+/* ===== DOM REFS — ACCOUNT ===== */
+const passwordForm = document.getElementById('passwordForm');
+const pwMsg = document.getElementById('pwMsg');
+const pwSaveBtn = document.getElementById('pwSaveBtn');
+
+/* ===== SHA-256 ===== */
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 /* ===== GITHUB API HELPERS ===== */
 async function ghFetch(path, method = 'GET', body = null) {
   const opts = { method, headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } };
@@ -78,14 +91,10 @@ async function deleteFile(path, sha) {
 }
 
 /* ===== LOGIN ===== */
-loginForm.addEventListener('submit', (e) => {
+loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   loginError.textContent = '';
-  const pw = document.getElementById('loginPassword').value;
-  if (pw !== ADMIN_PASSWORD) {
-    loginError.textContent = 'Incorrect password.';
-    return;
-  }
+
   token = document.getElementById('loginToken').value.trim();
   owner = document.getElementById('loginOwner').value.trim();
   repo = document.getElementById('loginRepo').value.trim();
@@ -93,6 +102,24 @@ loginForm.addEventListener('submit', (e) => {
     loginError.textContent = 'Please fill in all fields.';
     return;
   }
+
+  loginError.textContent = 'Verifying...';
+
+  try {
+    const data = await readFileContent('admin-config.json');
+    storedHash = data ? JSON.parse(data.content).passwordHash : FALLBACK_HASH;
+  } catch {
+    storedHash = FALLBACK_HASH;
+  }
+
+  const pw = document.getElementById('loginPassword').value;
+  const pwHash = await sha256(pw);
+
+  if (pwHash !== storedHash) {
+    loginError.textContent = 'Incorrect password.';
+    return;
+  }
+
   localStorage.setItem('adminToken', token);
   localStorage.setItem('adminOwner', owner);
   localStorage.setItem('adminRepo', repo);
@@ -195,7 +222,6 @@ function renderDashboardPosts() {
   `).join('');
 }
 
-/* ===== EVENT DELEGATION for Edit/Delete buttons ===== */
 postsBody.addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   if (!btn) return;
@@ -203,11 +229,8 @@ postsBody.addEventListener('click', (e) => {
   if (!row) return;
   const id = row.dataset.postId;
 
-  if (btn.classList.contains('act-edit')) {
-    editPost(id);
-  } else if (btn.classList.contains('act-delete')) {
-    deletePost(id);
-  }
+  if (btn.classList.contains('act-edit')) editPost(id);
+  else if (btn.classList.contains('act-delete')) deletePost(id);
 });
 
 function escHtml(s) {
@@ -229,15 +252,12 @@ document.getElementById('edCancelBtn').addEventListener('click', showDashboard);
 
 function editPost(id) {
   const post = allPosts.find(p => p.id === id);
-  if (!post) {
-    alert('Post not found in index. Try refreshing.');
-    return;
-  }
+  if (!post) { alert('Post not found. Try refreshing.'); return; }
   showEditor(post);
 }
 
 async function deletePost(id) {
-  if (!confirm(`Delete "${id}"? This cannot be undone.`)) return;
+  if (!confirm(`Delete "${id}"?`)) return;
   try {
     const sha = await getFileSha(`posts/${id}.json`);
     if (sha) await deleteFile(`posts/${id}.json`, sha);
@@ -344,7 +364,6 @@ settingsForm.addEventListener('submit', async (e) => {
   settingsSaveBtn.disabled = true;
 
   const cfg = {};
-
   SETTINGS_FIELDS.forEach(key => {
     const el = document.getElementById(`cfg-${key}`);
     if (!el) return;
@@ -356,7 +375,6 @@ settingsForm.addEventListener('submit', async (e) => {
     }
     current[parts[parts.length - 1]] = el.value;
   });
-
   cfg.siteName = cfg.siteName || 'Faith & Fellowship';
 
   try {
@@ -370,6 +388,57 @@ settingsForm.addEventListener('submit', async (e) => {
     settingsMsg.className = 'form-msg error';
   }
   settingsSaveBtn.disabled = false;
+});
+
+/* ===== CHANGE PASSWORD ===== */
+passwordForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  pwMsg.textContent = '';
+  pwMsg.className = 'form-msg';
+  pwSaveBtn.disabled = true;
+
+  const current = document.getElementById('pw-current').value;
+  const newPw = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+
+  const currentHash = await sha256(current);
+  if (currentHash !== storedHash) {
+    pwMsg.textContent = 'Current password is incorrect.';
+    pwMsg.className = 'form-msg error';
+    pwSaveBtn.disabled = false;
+    return;
+  }
+
+  if (newPw.length < 4) {
+    pwMsg.textContent = 'New password must be at least 4 characters.';
+    pwMsg.className = 'form-msg error';
+    pwSaveBtn.disabled = false;
+    return;
+  }
+
+  if (newPw !== confirm) {
+    pwMsg.textContent = 'New passwords do not match.';
+    pwMsg.className = 'form-msg error';
+    pwSaveBtn.disabled = false;
+    return;
+  }
+
+  const newHash = await sha256(newPw);
+
+  try {
+    const data = await readFileContent('admin-config.json');
+    const config = data ? JSON.parse(data.content) : {};
+    config.passwordHash = newHash;
+    await writeFile('admin-config.json', JSON.stringify(config, null, 2), data ? data.sha : null);
+    storedHash = newHash;
+    pwMsg.textContent = 'Password updated successfully!';
+    pwMsg.className = 'form-msg success';
+    passwordForm.reset();
+  } catch (err) {
+    pwMsg.textContent = 'Error: ' + err.message;
+    pwMsg.className = 'form-msg error';
+  }
+  pwSaveBtn.disabled = false;
 });
 
 /* ===== RESTORE SESSION ===== */
