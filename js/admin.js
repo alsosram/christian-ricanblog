@@ -1,5 +1,5 @@
 /* ===== FALLBACK PASSWORD HASH ===== */
-const FALLBACK_HASH = 'REDACTED';
+const FALLBACK_HASH = 'b9bdfb380fbfe39c592804dee2ef71d3e949d10d34b8e3267729616d02108efd';
 
 /* ===== STATE ===== */
 let token = '';
