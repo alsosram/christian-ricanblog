@@ -146,9 +146,9 @@ loginMfaBtn.addEventListener('click', async () => {
   loginMfaError.textContent = 'Verifying...';
   loginMfaBtn.disabled = true;
   try {
-    const { data: chal, error: chalErr } = await sbMfaChallenge(_mfaFactorId);
+    const { data: chal, error: chalErr } = await sbMfaChallenge();
     if (chalErr) throw chalErr;
-    const { error: verErr } = await sbMfaVerify(_mfaFactorId, chal.id, code);
+    const { error: verErr } = await sbMfaVerify(null, chal.id, code);
     if (verErr) throw verErr;
     showDashboard();
   } catch (err) {
@@ -170,7 +170,8 @@ async function showLoginMfaEnroll() {
     _loginEnrollFactorId = data.id;
     loginMfaSecret.textContent = data.totp.secret;
     loginMfaQr.innerHTML = '';
-    new QRCode(loginMfaQr, { text: data.totp.qr_code, width: 180, height: 180, colorDark: '#1E3D63', colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(loginMfaQr, { text: data.totp.qr_code, width: 180, height: 180, colorDark: '#000000', colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+    (function(){var c=loginMfaQr.querySelector('canvas');if(c){var i=new Image();i.src=c.toDataURL('image/png');i.width=180;i.height=180;c.parentNode.replaceChild(i,c);}})();
   } catch (err) {
     loginMfaEnrollError.textContent = 'MFA setup unavailable (' + err.message + '). ';
     loginMfaEnrollError.className = 'warning';
@@ -581,7 +582,8 @@ mfaStartEnrollBtn.addEventListener('click', async () => {
     window._mfaEnrollFactorId = data.id;
     mfaSecret.textContent = data.totp.secret;
     mfaQr.innerHTML = '';
-    new QRCode(mfaQr, { text: data.totp.qr_code, width: 180, height: 180, colorDark: '#1E3D63', colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(mfaQr, { text: data.totp.qr_code, width: 180, height: 180, colorDark: '#000000', colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+    (function(){var c=mfaQr.querySelector('canvas');if(c){var i=new Image();i.src=c.toDataURL('image/png');i.width=180;i.height=180;c.parentNode.replaceChild(i,c);}})();
   } catch (err) { mfaEnrollMsg.textContent = 'Error: ' + err.message; mfaEnrollMsg.className = 'form-msg error'; }
 });
 
