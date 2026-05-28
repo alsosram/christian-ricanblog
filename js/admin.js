@@ -644,7 +644,11 @@ sbAuth.getSession().then(async ({ data: { session } }) => {
     }
   }
   if (session) {
-    if (session.user?.user_metadata?.totp_secret) showDashboard();
+    if (session.user?.user_metadata?.totp_secret) {
+      loginForm.style.display = 'none';
+      loginMfaStep.style.display = '';
+      loginMfaCode.focus();
+    }
     else showLoginMfaEnroll();
   }
 });
