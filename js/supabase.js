@@ -72,17 +72,26 @@ const sbAuth = {
     return Promise.resolve({ data: { session: null }, error: null });
   },
 
-  updateUser: (updates) =>
-    _refreshToken().then(() =>
-      sbFetch('PUT', 'auth/v1/user', updates)
-        .then(data => {
-          try {
-            const s = JSON.parse(localStorage.getItem('sb-session'));
-            if (s) { s.user = data; localStorage.setItem('sb-session', JSON.stringify(s)); }
-          } catch {}
-          return { data, error: null };
-        })
-    ).catch(err => ({ data: null, error: err }))
+  updateUser: (updates) => {
+    const attempt = () =>
+      sbFetch('PUT', 'auth/v1/user', updates).then(data => {
+        try {
+          const s = JSON.parse(localStorage.getItem('sb-session'));
+          if (s) { s.user = data; localStorage.setItem('sb-session', JSON.stringify(s)); }
+        } catch {}
+        return { data, error: null };
+      });
+    return attempt().catch(err => {
+      if (err.message && err.message.includes('JWT')) {
+        return _refreshToken().then(attempt).catch(() => {
+          try { localStorage.removeItem('sb-session'); } catch {}
+          _token = null;
+          return { data: null, error: new Error('Session expired. Please refresh the page and log in again.') };
+        });
+      }
+      return { data: null, error: err };
+    });
+  }
 };
 
 sbAuth.getSession();
