@@ -20,13 +20,33 @@ function sbFetch(method, path, body) {
   });
 }
 
+function _refreshToken() {
+  const saved = localStorage.getItem('sb-session');
+  if (!saved) return Promise.reject(new Error('No session'));
+  try {
+    const s = JSON.parse(saved);
+    if (!s.refresh_token) return Promise.reject(new Error('No refresh token'));
+    return sbFetch('POST', 'auth/v1/token?grant_type=refresh_token', { refresh_token: s.refresh_token })
+      .then(data => {
+        if (data.access_token) {
+          _token = data.access_token;
+          s.access_token = data.access_token;
+          s.refresh_token = data.refresh_token || s.refresh_token;
+          if (data.user) s.user = data.user;
+          localStorage.setItem('sb-session', JSON.stringify(s));
+        }
+        return data;
+      });
+  } catch (e) { return Promise.reject(e); }
+}
+
 const sbAuth = {
   signInWithPassword: ({ email, password }) =>
     sbFetch('POST', 'auth/v1/token?grant_type=password', { email, password })
       .then(data => {
         if (data.access_token) {
           _token = data.access_token;
-          const s = { access_token: data.access_token, refresh_token: data.refresh_token, expires_at: data.expires_at, user: data.user };
+          const s = { access_token: data.access_token, refresh_token: data.refresh_token, user: data.user };
           try { localStorage.setItem('sb-session', JSON.stringify(s)); } catch {}
         }
         return { data, error: null };
@@ -43,7 +63,7 @@ const sbAuth = {
       const saved = localStorage.getItem('sb-session');
       if (saved) {
         const s = JSON.parse(saved);
-        if (s.access_token && (!s.expires_at || s.expires_at * 1000 > Date.now())) {
+        if (s.access_token) {
           _token = s.access_token;
           return Promise.resolve({ data: { session: s }, error: null });
         }
@@ -53,14 +73,16 @@ const sbAuth = {
   },
 
   updateUser: (updates) =>
-    sbFetch('PUT', 'auth/v1/user', updates)
-      .then(data => {
-        try {
-          const s = JSON.parse(localStorage.getItem('sb-session'));
-          if (s) { s.user = data; localStorage.setItem('sb-session', JSON.stringify(s)); }
-        } catch {}
-        return { data, error: null };
-      }).catch(err => ({ data: null, error: err }))
+    _refreshToken().then(() =>
+      sbFetch('PUT', 'auth/v1/user', updates)
+        .then(data => {
+          try {
+            const s = JSON.parse(localStorage.getItem('sb-session'));
+            if (s) { s.user = data; localStorage.setItem('sb-session', JSON.stringify(s)); }
+          } catch {}
+          return { data, error: null };
+        })
+    ).catch(err => ({ data: null, error: err }))
 };
 
 sbAuth.getSession();
