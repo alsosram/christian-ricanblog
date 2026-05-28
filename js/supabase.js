@@ -52,8 +52,8 @@ const sbAuth = {
     return Promise.resolve({ data: { session: null }, error: null });
   },
 
-  updateUser: ({ password }) =>
-    sbFetch('PUT', 'auth/v1/user', { password })
+  updateUser: (updates) =>
+    sbFetch('PUT', 'auth/v1/user', updates)
       .then(data => ({ data, error: null })).catch(err => ({ data: null, error: err }))
 };
 
